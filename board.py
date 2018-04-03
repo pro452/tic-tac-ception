@@ -71,6 +71,28 @@ class Board():
 
         print("\nWhere would you like to go? \nEnter in the form of a coorindat")
 
+        def hValue(boardNumber):
+            playerPieces = []
+            oppenentPieces = []
+
+            empty = True
+            for number in boardIndexs[boardNumber]:
+                if number in occupied:
+                    empty = False
+
+            if empty:
+                return 0
+
+            for number in range(0,9):
+                if self.Values[boardIndexs[boardNumber][number]] == player:
+                    playerPieces.append(number)
+                elif self.Values[boardIndexs[boardNumber][number]] == oppenent:
+                    oppenentPieces.append(number)
+
+            print(playerPieces)
+            print(oppenentPieces)
+
+
         def whichBoard(number):
             for board in range (0,9):
                 for position in range(0,9):
@@ -99,6 +121,7 @@ class Board():
             self.Values[position] = oppenent
             occupied.add(position)
             print(updateBoard())
+            hValue(boardNumber)
             return whichBoard(position)
 
         def yourTurn(boardNumber):
