@@ -1,3 +1,13 @@
+"""
+
+Written by: Michael Matthews
+Updated: 4-2-18
+Written for: Artifical Intelligence
+
+This program is a game called Tic-Tac-Ception which the oppenent is an AI that uses minimax with alpha-beta triming
+
+"""
+
 class Board():
 
     def __init__(self):
@@ -28,7 +38,6 @@ class Board():
                      "  " + self.Values[63] + " | " + self.Values[64] + " | " + self.Values[65] + "   ||   " + self.Values[66] + " | " + self.Values[67] + " | " + self.Values[68] + "   ||   " + self.Values[69] + " | " + self.Values[70] + " | " + self.Values[71] + "   \n" \
                      "+---+---+---+ || +---+---+---+ || +---+---+---+ \n" \
                      "  " + self.Values[72] + " | " + self.Values[73] + " | " + self.Values[74] + "   ||   " + self.Values[75] + " | " + self.Values[76] + " | " + self.Values[77] + "   ||   " + self.Values[78] + " | " + self.Values[79] + " | " + self.Values[80] + "   \n"
-
 
         while(player == ''):
             print("\nWelcome to M&M's Tic-Tac-Ception!\n\nWill you be playing as 'X' or 'O'?")
