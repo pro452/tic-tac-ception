@@ -81,6 +81,15 @@ class Board():
         def oppenentTurn(boardNumber):
             position = -1
             got_a_number = False
+            first_corner_play = True
+
+            for number in boardIndexs[boardNumber]:
+                if number in occupied:
+                    first_corner_play = False
+
+            if(first_corner_play):
+                position = boardIndexs[boardNumber][0]
+                got_a_number = True
 
             while not got_a_number:
                 position = random.randint(0,80)
