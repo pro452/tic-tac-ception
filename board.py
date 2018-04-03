@@ -8,12 +8,7 @@ class Board():
         self.main()
 
     def main(self):
-        count = 0
-        # for " + self.Values[0] + " in range(9):
-        #     for y in range(9):
-        #         print(self.Values[" + self.Values[0] + "][y])
-        #         count += 1
-        # print(count)
+
         string = "  " + self.Values[0] + " | " + self.Values[1] + " | " + self.Values[2] + "   ||   " + self.Values[3] + " | " + self.Values[4] + " | " + self.Values[5] + "   ||   " + self.Values[6] + " | " + self.Values[7] + " | " + self.Values[8] + "   \n" \
                  "+---+---+---+ || +---+---+---+ || +---+---+---+ \n" \
                  "  " + self.Values[9] + " | " + self.Values[10] + " | " + self.Values[11] + "   ||   " + self.Values[12] + " | " + self.Values[13] + " | " + self.Values[14] + "   ||   " + self.Values[15] + " | " + self.Values[16] + " | " + self.Values[17] + "   \n" \
