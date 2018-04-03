@@ -30,6 +30,10 @@ class Board():
         oppenent = "" #the AIs symbol
         occupied = set() #parts of the board that contain either an 'X' or 'O'
         #occupied = occupied.append(-1)
+        boardIndexs = [[0,1,2,9,10,11,18,19,20],[3,4,5,12,13,14,21,22,23],[6,7,8,15,16,17,24,25,26],
+                       [27,28,29,36,37,38,45,46,47],[30,31,32,39,40,41,48,49,50],[33,34,35,42,43,44,51,52,53],
+                       [54,55,56,63,64,65,72,73,74],[57,58,59,66,67,68,69,75,76,77],[60,61,62,70,71,72,78,79,80]] #the indexs of each small board in order top left to bottom right
+        #boardNumber = 4
 
         def updateBoard():
             return "\n  " + self.Values[0] + " | " + self.Values[1] + " | " + self.Values[2] + "   ||   " + self.Values[3] + " | " + self.Values[4] + " | " + self.Values[5] + "   ||   " + self.Values[6] + " | " + self.Values[7] + " | " + self.Values[8] + "   \n" \
@@ -66,33 +70,46 @@ class Board():
         print(updateBoard())
 
         print("\nWhere would you like to go? \nEnter in the form of a coorindat")
-        user = raw_input()
 
-        def oppenentTurn():
+        def whichBoard(number):
+            for board in range (0,9):
+                for position in range(0,9):
+                    if number == boardIndexs[board][position]:
+                        return position
+            return -1
+
+        def oppenentTurn(boardNumber):
             position = -1
             got_a_number = False
 
             while not got_a_number:
                 position = random.randint(0,80)
-                if not position in occupied:
+                if (not position in occupied) and (position in boardIndexs[boardNumber]): #check for board
                     got_a_number = True
 
             self.Values[position] = oppenent
             occupied.add(position)
             print(updateBoard())
+            return whichBoard(position)
 
-        while(user != 'x'):
-            if int(user) in occupied:
-                print("SPOT ALREADY TAKEN TRY AGAIN!")
-                user = raw_input()
-            else:
-                self.Values[int(user)] = player
-                occupied.add(int(user))
-                print(updateBoard())
-                oppenentTurn()
-                print("\nWhere would you like to go? \nEnter in the form of a coorindat")
-                user = raw_input()
+        def yourTurn(boardNumber):
+            user = raw_input()
+            while(user != 'x'):
+                if int(user) in occupied:
+                    print("SPOT ALREADY TAKEN TRY AGAIN!")
+                    user = raw_input()
+                elif not int(user) in boardIndexs[boardNumber]:
+                    print("You must got in board ", boardNumber)
+                    user = raw_input()
+                else:
+                    self.Values[int(user)] = player
+                    occupied.add(int(user))
+                    print(updateBoard())
+                    boardNumber = oppenentTurn(whichBoard(int(user)))
+                    print("\nWhere would you like to go? \nEnter in the form of a coorindat")
+                    user = raw_input()
 
+        yourTurn(4)
 
         print("Okay you'll be playing as " + player + '.')
 Board()
