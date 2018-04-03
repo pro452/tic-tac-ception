@@ -6,7 +6,15 @@ Written for: Artifical Intelligence
 
 This program is a game called Tic-Tac-Ception which the oppenent is an AI that uses minimax with alpha-beta triming
 
+
+
+
+possible features:
+    - have it play itself against a dummy that goes in random places and see how times it wins
+
 """
+
+import random
 
 class Board():
 
@@ -19,6 +27,9 @@ class Board():
 
     def main(self):
         player = "" #the players symbol
+        oppenent = "" #the AIs symbol
+        occupied = set() #parts of the board that contain either an 'X' or 'O'
+        #occupied = occupied.append(-1)
 
         def updateBoard():
             return "\n  " + self.Values[0] + " | " + self.Values[1] + " | " + self.Values[2] + "   ||   " + self.Values[3] + " | " + self.Values[4] + " | " + self.Values[5] + "   ||   " + self.Values[6] + " | " + self.Values[7] + " | " + self.Values[8] + "   \n" \
@@ -45,8 +56,10 @@ class Board():
 
             if user == 'x' or user == 'X':
                 player = 'X'
+                oppenent = 'O'
             elif user == 'o' or user == 'O':
-                player = "O"
+                player = 'O'
+                oppenent = 'X'
             else:
                 print("Please enter a valid symbol!\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n")
 
@@ -55,12 +68,31 @@ class Board():
         print("\nWhere would you like to go? \nEnter in the form of a coorindat")
         user = raw_input()
 
-        while(user != 'x'):
-            self.Values[int(user)] = player
-            print(self.Values[int(user)])
+        def oppenentTurn():
+            position = -1
+            got_a_number = False
+
+            while not got_a_number:
+                position = random.randint(0,80)
+                if not position in occupied:
+                    got_a_number = True
+
+            self.Values[position] = oppenent
+            occupied.add(position)
             print(updateBoard())
-            print("\nWhere would you like to go? \nEnter in the form of a coorindat")
-            user = raw_input()
+
+        while(user != 'x'):
+            if int(user) in occupied:
+                print("SPOT ALREADY TAKEN TRY AGAIN!")
+                user = raw_input()
+            else:
+                self.Values[int(user)] = player
+                occupied.add(int(user))
+                print(updateBoard())
+                oppenentTurn()
+                print("\nWhere would you like to go? \nEnter in the form of a coorindat")
+                user = raw_input()
+
 
         print("Okay you'll be playing as " + player + '.')
 Board()
