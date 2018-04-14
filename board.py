@@ -7,10 +7,9 @@ Written for: Artifical Intelligence
 This program is a game called Tic-Tac-Ception which the oppenent is an AI that uses minimax with alpha-beta triming
 
 
-
-
 possible features:
     - have it play itself against a dummy that goes in random places and see how times it wins
+    - Perform screen clear after each turn
 
 """
 
@@ -34,6 +33,7 @@ class Board():
                        [27,28,29,36,37,38,45,46,47],[30,31,32,39,40,41,48,49,50],[33,34,35,42,43,44,51,52,53],
                        [54,55,56,63,64,65,72,73,74],[57,58,59,66,67,68,69,75,76,77],[60,61,62,70,71,72,78,79,80]] #the indexs of each small board in order top left to bottom right
         #boardNumber = 4
+        winningRows = [[0,1,2],[3,4,5],[6,7,8],[0,3,6],[1,4,7],[2,5,8],[0,4,8],[2,4,5]]
 
         def updateBoard():
             return "\n  " + self.Values[0] + " | " + self.Values[1] + " | " + self.Values[2] + "   ||   " + self.Values[3] + " | " + self.Values[4] + " | " + self.Values[5] + "   ||   " + self.Values[6] + " | " + self.Values[7] + " | " + self.Values[8] + "   \n" \
@@ -74,6 +74,7 @@ class Board():
         def hValue(boardNumber):
             playerPieces = []
             oppenentPieces = []
+            playersHValue = 0
 
             empty = True
             for number in boardIndexs[boardNumber]:
@@ -89,9 +90,20 @@ class Board():
                 elif self.Values[boardIndexs[boardNumber][number]] == oppenent:
                     oppenentPieces.append(number)
 
+            if len(playerPieces) == 0:
+                return 0
+
+            for list in winningRows:
+                for playerSymbol in playerPieces:
+                    if playerSymbol in list:
+                        for oppenentSymbol in oppenentPieces:
+                            if not oppenentSymbol in list:
+                                playersHValue += 1
+
+            print(playersHValue)
+
             print(playerPieces)
             print(oppenentPieces)
-
 
         def whichBoard(number):
             for board in range (0,9):
@@ -121,25 +133,48 @@ class Board():
             self.Values[position] = oppenent
             occupied.add(position)
             print(updateBoard())
-            hValue(boardNumber)
+            print(hValue(boardNumber))
             return whichBoard(position)
 
         def yourTurn(boardNumber):
-            user = raw_input()
-            while(user != 'x'):
+            user = ""
+            # while(user == '' ):
+            #     user = raw_input()
+
+            parsed = False
+            while not parsed:
+                try:
+                    user = int(raw_input('Only Numbers! Try agin: '))
+                    parsed = True
+                except ValueError:
+                    print('Invalid value!')
+
+            while(user != -1):
                 if int(user) in occupied:
                     print("SPOT ALREADY TAKEN TRY AGAIN!")
-                    user = raw_input()
+                    try:
+                        user = int(raw_input('Input: '))
+                        parsed = True
+                    except ValueError:
+                        print('Invalid value!1')
                 elif not int(user) in boardIndexs[boardNumber]:
                     print("You must got in board ", boardNumber)
-                    user = raw_input()
+                    try:
+                        user = int(raw_input('Input: '))
+                        parsed = True
+                    except ValueError:
+                        print('Invalid value!2')
                 else:
                     self.Values[int(user)] = player
                     occupied.add(int(user))
                     print(updateBoard())
                     boardNumber = oppenentTurn(whichBoard(int(user)))
                     print("\nWhere would you like to go? \nEnter in the form of a coorindat")
-                    user = raw_input()
+                    try:
+                        user = int(raw_input('Input: '))
+                        parsed = True
+                    except ValueError:
+                        print('Invalid value!')
 
         yourTurn(4)
 
