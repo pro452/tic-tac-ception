@@ -33,8 +33,10 @@ class Board():
                        [27,28,29,36,37,38,45,46,47],[30,31,32,39,40,41,48,49,50],[33,34,35,42,43,44,51,52,53],
                        [54,55,56,63,64,65,72,73,74],[57,58,59,66,67,68,75,76,77],[60,61,62,69,70,71,78,79,80]] #the indexs of each small board in order top left to bottom right
         #boardNumber = 4
-        winningRows = [[0,1,2],[3,4,5],[6,7,8],[0,3,6],[1,4,7],[2,5,8],[0,4,8],[2,4,5]]
+        winningRows = [[0,1,2],[3,4,5],[6,7,8],[0,3,6],[1,4,7],[2,5,8],[0,4,8],[2,4,6]]
         wonBoards = []
+        playerWins = []
+        oppenentWins = []
 
         def updateBoard():
             return "\n  " + self.Values[0] + " | " + self.Values[1] + " | " + self.Values[2] + "   ||   " + self.Values[3] + " | " + self.Values[4] + " | " + self.Values[5] + "   ||   " + self.Values[6] + " | " + self.Values[7] + " | " + self.Values[8] + "   \n" \
@@ -127,6 +129,19 @@ class Board():
 
             return -1
 
+        def gameOver():
+            if len(wonBoards) < 3:
+                return
+
+            for list in winningRows:
+                if list[0] in playerWins and list[1] in playerWins and list[2] in playerWins:
+                    print("Congratulations You've won!!!!!!!!")
+                    exit(0)
+                elif list[0] in oppenentWins and list[1] in oppenentWins and list[2] in oppenentWins:
+                    print("You've lost...")
+                    exit(0)
+            return
+
         def wonRow(boardNumber, whoWon):
             list = boardIndexs[boardNumber]
 
@@ -164,6 +179,12 @@ class Board():
                         return position
             return -1
 
+        def whereAmI(number):
+            for board in range(0,9):
+                for position in range(0,9):
+                    if number == boardIndexs[board][position]:
+                        return board
+
         def oppenentTurn(boardNumber):
             position = -1
             got_a_number = False
@@ -186,10 +207,12 @@ class Board():
 
             self.Values[position] = oppenent
             occupied.add(position)
-            if checkBoard(boardNumber)== 1:
+            if checkBoard(whereAmI(position))== 1:
                 wonRow(boardNumber, oppenent)
+                oppenentWins.append(boardNumber)
             print(updateBoard())
             print(hValue(boardNumber))
+            gameOver()
             return whichBoard(position)
 
         def checkIfInWonBoard(position):
@@ -232,10 +255,14 @@ class Board():
                     self.Values[int(user)] = player
                     occupied.add(int(user))
                     print(updateBoard())
-                    if checkBoard(boardNumber) == 0:
-                        wonRow(boardNumber, player)
+                    print("checking board")
+                    print(whereAmI(int(user)))
+                    print(checkBoard(whereAmI(int(user))))
+                    if checkBoard(whereAmI(int(user))) == 0:
+                        wonRow(whereAmI(int(user)), player)
+                        playerWins.append(whereAmI(int(user)))
                     #print("board number: ", whichBoard(int(user)))
-
+                    gameOver()
                     boardNumber = oppenentTurn(whichBoard(int(user)))
                     print("\nWhere would you like to go? \nEnter in the form of a coorindate")
                     try:
