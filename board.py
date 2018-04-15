@@ -31,9 +31,10 @@ class Board():
         #occupied = occupied.append(-1)
         boardIndexs = [[0,1,2,9,10,11,18,19,20],[3,4,5,12,13,14,21,22,23],[6,7,8,15,16,17,24,25,26],
                        [27,28,29,36,37,38,45,46,47],[30,31,32,39,40,41,48,49,50],[33,34,35,42,43,44,51,52,53],
-                       [54,55,56,63,64,65,72,73,74],[57,58,59,66,67,68,69,75,76,77],[60,61,62,70,71,72,78,79,80]] #the indexs of each small board in order top left to bottom right
+                       [54,55,56,63,64,65,72,73,74],[57,58,59,66,67,68,75,76,77],[60,61,62,69,70,71,78,79,80]] #the indexs of each small board in order top left to bottom right
         #boardNumber = 4
         winningRows = [[0,1,2],[3,4,5],[6,7,8],[0,3,6],[1,4,7],[2,5,8],[0,4,8],[2,4,5]]
+        wonBoards = []
 
         def updateBoard():
             return "\n  " + self.Values[0] + " | " + self.Values[1] + " | " + self.Values[2] + "   ||   " + self.Values[3] + " | " + self.Values[4] + " | " + self.Values[5] + "   ||   " + self.Values[6] + " | " + self.Values[7] + " | " + self.Values[8] + "   \n" \
@@ -105,6 +106,57 @@ class Board():
             print(playerPieces)
             print(oppenentPieces)
 
+        def checkBoard(boardNumber):
+            playerPieces = []
+            oppenentPieces = []
+
+            for number in range(0, 9):
+                if self.Values[boardIndexs[boardNumber][number]] == player:
+                    playerPieces.append(number)
+                elif self.Values[boardIndexs[boardNumber][number]] == oppenent:
+                    oppenentPieces.append(number)
+
+            #playerPieces = set(playerPieces)
+            #oppenentPieces = set(oppenentPieces)
+
+            for list in winningRows:
+                if list[0] in playerPieces and list[1] in playerPieces and list[2] in playerPieces:
+                    return 0
+                elif list[0] in oppenentPieces and list[1] in oppenentPieces and list[2] in oppenentPieces:
+                    return 1
+
+            return -1
+
+        def wonRow(boardNumber, whoWon):
+            list = boardIndexs[boardNumber]
+
+            if whoWon == 'X':
+                self.Values[list[0]] = 'X'
+                self.Values[list[2]] = 'X'
+                self.Values[list[4]] = 'X'
+                self.Values[list[6]] = 'X'
+                self.Values[list[8]] = 'X'
+                self.Values[list[1]] = ' '
+                self.Values[list[3]] = ' '
+                self.Values[list[5]] = ' '
+                self.Values[list[7]] = ' '
+            else:
+                self.Values[list[0]] = 'O'
+                self.Values[list[1]] = 'O'
+                self.Values[list[2]] = 'O'
+                self.Values[list[3]] = 'O'
+                self.Values[list[5]] = 'O'
+                self.Values[list[6]] = 'O'
+                self.Values[list[7]] = 'O'
+                self.Values[list[8]] = 'O'
+                self.Values[list[4]] = ' '
+
+            updateBoard()
+
+            wonBoards.append(boardNumber)
+            for index in range(0,9):
+                occupied.add(list[index])
+
         def whichBoard(number):
             for board in range (0,9):
                 for position in range(0,9):
@@ -132,9 +184,19 @@ class Board():
 
             self.Values[position] = oppenent
             occupied.add(position)
+            if checkBoard(boardNumber)== 1:
+                wonRow(boardNumber, oppenent)
             print(updateBoard())
             print(hValue(boardNumber))
             return whichBoard(position)
+
+        def checkIfInWonBoard(position):
+            if(len(wonBoards)==0):
+                return False
+            for board in range(0, len(wonBoards)):
+                if position in boardIndexs[wonBoards[board]]:
+                    return True
+            return False
 
         def yourTurn(boardNumber):
             user = ""
@@ -157,7 +219,7 @@ class Board():
                         parsed = True
                     except ValueError:
                         print('Invalid value!1')
-                elif not int(user) in boardIndexs[boardNumber]:
+                elif not int(user) in boardIndexs[boardNumber] and not boardNumber in wonBoards:
                     print("You must got in board ", boardNumber)
                     try:
                         user = int(raw_input('Input: '))
@@ -168,8 +230,12 @@ class Board():
                     self.Values[int(user)] = player
                     occupied.add(int(user))
                     print(updateBoard())
+                    if checkBoard(boardNumber) == 0:
+                        wonRow(boardNumber, player)
+                    #print("board number: ", whichBoard(int(user)))
+
                     boardNumber = oppenentTurn(whichBoard(int(user)))
-                    print("\nWhere would you like to go? \nEnter in the form of a coorindat")
+                    print("\nWhere would you like to go? \nEnter in the form of a coorindate")
                     try:
                         user = int(raw_input('Input: '))
                         parsed = True
