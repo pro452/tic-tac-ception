@@ -179,6 +179,8 @@ class Board():
 
             while not got_a_number:
                 position = random.randint(0,80)
+                if not position in occupied and boardNumber in wonBoards:
+                    got_a_number = True
                 if (not position in occupied) and (position in boardIndexs[boardNumber]): #check for board
                     got_a_number = True
 
