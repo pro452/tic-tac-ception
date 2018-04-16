@@ -17,6 +17,7 @@ import random
 
 class Board():
 
+    #Constructor initlizes the board to an empty state and then proceeds to call the main function
     def __init__(self):
         self.Values = []
         for index in range(0,81):
@@ -33,11 +34,12 @@ class Board():
                        [27,28,29,36,37,38,45,46,47],[30,31,32,39,40,41,48,49,50],[33,34,35,42,43,44,51,52,53],
                        [54,55,56,63,64,65,72,73,74],[57,58,59,66,67,68,75,76,77],[60,61,62,69,70,71,78,79,80]] #the indexs of each small board in order top left to bottom right
         #boardNumber = 4
-        winningRows = [[0,1,2],[3,4,5],[6,7,8],[0,3,6],[1,4,7],[2,5,8],[0,4,8],[2,4,6]]
-        wonBoards = []
-        playerWins = []
-        oppenentWins = []
+        winningRows = [[0,1,2],[3,4,5],[6,7,8],[0,3,6],[1,4,7],[2,5,8],[0,4,8],[2,4,6]] #these are all the possible ways to win a tic-tac-toe board
+        wonBoards = []    #this list will contain the index of all small boards that have been won
+        playerWins = []   #ths list will contain the index of boards that the player has won
+        oppenentWins = [] #this list will contain the index of boards that the oppenent has won
 
+        #This function returns the game board represented as an string
         def updateBoard():
             return "\n  " + self.Values[0] + " | " + self.Values[1] + " | " + self.Values[2] + "   ||   " + self.Values[3] + " | " + self.Values[4] + " | " + self.Values[5] + "   ||   " + self.Values[6] + " | " + self.Values[7] + " | " + self.Values[8] + "   \n" \
                      "+---+---+---+ || +---+---+---+ || +---+---+---+ \n" \
@@ -57,6 +59,7 @@ class Board():
                      "+---+---+---+ || +---+---+---+ || +---+---+---+ \n" \
                      "  " + self.Values[72] + " | " + self.Values[73] + " | " + self.Values[74] + "   ||   " + self.Values[75] + " | " + self.Values[76] + " | " + self.Values[77] + "   ||   " + self.Values[78] + " | " + self.Values[79] + " | " + self.Values[80] + "   \n"
 
+        #Game loop starts
         while(player == ''):
             print("\nWelcome to M&M's Tic-Tac-Ception!\n\nWill you be playing as 'X' or 'O'?")
             user = raw_input()
@@ -72,8 +75,9 @@ class Board():
 
         print(updateBoard())
 
-        print("\nWhere would you like to go? \nEnter in the form of a coorindat")
+        print("\nWhere would you like to go? \nEnter in the form of a coordinate")
 
+        #This functiono calculates the h-value for a particular board
         def hValue(boardNumber):
             playerPieces = []
             oppenentPieces = []
@@ -108,6 +112,11 @@ class Board():
             print(playerPieces)
             print(oppenentPieces)
 
+        #This function checks the specified board to see if either the player or oppenet has 3 in a row there by winning that specified board
+        #It returns
+        #   0 if the player has won
+        #   1 if the oppenent has won
+        #   -1 if nobody has won the board
         def checkBoard(boardNumber):
             playerPieces = []
             oppenentPieces = []
@@ -129,6 +138,8 @@ class Board():
 
             return -1
 
+        #This funcition checks to see if anybody has won the entire game
+        #If somebody has won it clean exits
         def gameOver():
             if len(wonBoards) < 3:
                 return
@@ -142,6 +153,9 @@ class Board():
                     exit(0)
             return
 
+        #This function updates the board to show that either the player or oppenent has won
+        #If 'X' won then it updates that particular board, filling it up with X's in the shape of an X
+        #If 'O' won then it updates that particular board, filling it up with O's in the shape of an O
         def wonRow(boardNumber, whoWon):
             list = boardIndexs[boardNumber]
 
@@ -172,6 +186,7 @@ class Board():
             for index in range(0,9):
                 occupied.add(list[index])
 
+        #Given an speicifed position return which position its in a smaller tic-tac-toe board
         def whichBoard(number):
             for board in range (0,9):
                 for position in range(0,9):
@@ -179,12 +194,14 @@ class Board():
                         return position
             return -1
 
+        #Given an specified position return which board it's in
         def whereAmI(number):
             for board in range(0,9):
                 for position in range(0,9):
                     if number == boardIndexs[board][position]:
                         return board
 
+        #This function represents the AI taking a turn
         def oppenentTurn(boardNumber):
             position = -1
             got_a_number = False
@@ -223,6 +240,7 @@ class Board():
                     return True
             return False
 
+        #This function represents the player taking a turn
         def yourTurn(boardNumber):
             user = ""
             # while(user == '' ):
@@ -264,14 +282,12 @@ class Board():
                     #print("board number: ", whichBoard(int(user)))
                     gameOver()
                     boardNumber = oppenentTurn(whichBoard(int(user)))
-                    print("\nWhere would you like to go? \nEnter in the form of a coorindate")
+                    print("\nWhere would you like to go? \nEnter in the form of a coordinate")
                     try:
                         user = int(raw_input('Input: '))
                         parsed = True
                     except ValueError:
                         print('Invalid value!')
-
-        yourTurn(4)
-
         print("Okay you'll be playing as " + player + '.')
+        yourTurn(4)
 Board()
