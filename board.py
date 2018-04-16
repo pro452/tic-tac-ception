@@ -152,9 +152,6 @@ class Board():
                     print("You've lost...")
                     exit(0)
 
-            if len(occupied) >= 80:
-                print("What a draw!")
-                exit(0)
             return
 
         #This function updates the board to show that either the player or oppenent has won
@@ -207,6 +204,10 @@ class Board():
 
         #This function represents the AI taking a turn
         def oppenentTurn(boardNumber):
+            if len(occupied) >= 81:
+                print("What a draw!")
+                exit(0)
+
             position = -1
             got_a_number = False
             first_corner_play = True
@@ -253,20 +254,20 @@ class Board():
             parsed = False
             while not parsed:
                 try:
-                    user = int(raw_input('Only Numbers! Try agin: '))
+                    user = int(raw_input('Input: '))
                     parsed = True
                 except ValueError:
                     print('Invalid value!')
 
             while(user != -1):
-                if int(user) in occupied:
-                    print("SPOT ALREADY TAKEN TRY AGAIN!")
-                    try:
-                        user = int(raw_input('Input: '))
-                        parsed = True
-                    except ValueError:
-                        print('Invalid value!1')
-                elif not int(user) in boardIndexs[boardNumber] and not boardNumber in wonBoards:
+                # if int(user) in occupied:
+                #     print("SPOT ALREADY TAKEN TRY AGAIN!")
+                #     try:
+                #         user = int(raw_input('Input: '))
+                #         parsed = True
+                #     except ValueError:
+                #         print('Invalid value!1')
+                if not int(user) in boardIndexs[boardNumber] and not boardNumber in wonBoards:
                     print("You must got in board ", boardNumber)
                     try:
                         user = int(raw_input('Input: '))
@@ -286,6 +287,9 @@ class Board():
                     #print("board number: ", whichBoard(int(user)))
                     gameOver()
                     boardNumber = oppenentTurn(whichBoard(int(user)))
+                    if len(occupied) >= 81:
+                        print("What a draw!")
+                        exit(0)
                     print("\nWhere would you like to go? \nEnter in the form of a coordinate")
                     try:
                         user = int(raw_input('Input: '))
