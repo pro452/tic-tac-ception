@@ -138,7 +138,7 @@ class Board():
 
             return -1
 
-        #This funcition checks to see if anybody has won the entire game
+        #This funcition checks to see if anybody has won the entire game, or if there was a tie
         #If somebody has won it clean exits
         def gameOver():
             if len(wonBoards) < 3:
@@ -151,6 +151,10 @@ class Board():
                 elif list[0] in oppenentWins and list[1] in oppenentWins and list[2] in oppenentWins:
                     print("You've lost...")
                     exit(0)
+
+            if len(occupied) >= 80:
+                print("What a draw!")
+                exit(0)
             return
 
         #This function updates the board to show that either the player or oppenent has won
@@ -225,8 +229,8 @@ class Board():
             self.Values[position] = oppenent
             occupied.add(position)
             if checkBoard(whereAmI(position))== 1:
-                wonRow(boardNumber, oppenent)
-                oppenentWins.append(boardNumber)
+                wonRow(whereAmI(position), oppenent)
+                oppenentWins.append(whereAmI(position))
             print(updateBoard())
             print(hValue(boardNumber))
             gameOver()
