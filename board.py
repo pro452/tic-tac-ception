@@ -296,6 +296,20 @@ class Board():
                         parsed = True
                     except ValueError:
                         print('Invalid value!')
+
+        def genTree(boardNumber):
+
+            possibleMoves = []
+            for index in range(0,9):
+                if not boardIndexs[boardNumber][index] in occupied:
+                    possibleMoves.append(boardIndexs[boardNumber][index])
+            if len(possibleMoves) == 0:
+                return
+
+
+
+
+
         print("Okay you'll be playing as " + player + '.')
         yourTurn(4)
 Board()
