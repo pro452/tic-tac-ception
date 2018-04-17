@@ -62,7 +62,7 @@ class Board():
         #Game loop starts
         while(player == ''):
             print("\nWelcome to M&M's Tic-Tac-Ception!\n\nWill you be playing as 'X' or 'O'?")
-            user = raw_input()
+            user = input()
 
             if user == 'x' or user == 'X':
                 player = 'X'
@@ -232,6 +232,8 @@ class Board():
             if checkBoard(whereAmI(position))== 1:
                 wonRow(whereAmI(position), oppenent)
                 oppenentWins.append(whereAmI(position))
+            else:
+                checkIfFull(whereAmI(position))
             print(updateBoard())
             print(hValue(boardNumber))
             gameOver()
@@ -245,32 +247,40 @@ class Board():
                     return True
             return False
 
+        #Checks if a given board is full
+        def checkIfFull(boardNumber):
+            for index in range(0,9):
+                if not (boardIndexs[boardNumber][index] in occupied):
+                    return
+            wonBoards.append(boardNumber)
+            return
+
         #This function represents the player taking a turn
         def yourTurn(boardNumber):
             user = ""
             # while(user == '' ):
-            #     user = raw_input()
+            #     user = input()
 
             parsed = False
             while not parsed:
                 try:
-                    user = int(raw_input('Input: '))
+                    user = int(input('Input: '))
                     parsed = True
                 except ValueError:
                     print('Invalid value!')
 
             while(user != -1):
-                # if int(user) in occupied:
-                #     print("SPOT ALREADY TAKEN TRY AGAIN!")
-                #     try:
-                #         user = int(raw_input('Input: '))
-                #         parsed = True
-                #     except ValueError:
-                #         print('Invalid value!1')
+                if int(user) in occupied:
+                    print("SPOT ALREADY TAKEN TRY AGAIN!")
+                    try:
+                        user = int(input('Input: '))
+                        parsed = True
+                    except ValueError:
+                        print('Invalid value!1')
                 if not int(user) in boardIndexs[boardNumber] and not boardNumber in wonBoards:
                     print("You must got in board ", boardNumber)
                     try:
-                        user = int(raw_input('Input: '))
+                        user = int(input('Input: '))
                         parsed = True
                     except ValueError:
                         print('Invalid value!2')
@@ -284,6 +294,8 @@ class Board():
                     if checkBoard(whereAmI(int(user))) == 0:
                         wonRow(whereAmI(int(user)), player)
                         playerWins.append(whereAmI(int(user)))
+                    else:
+                        checkIfFull(whereAmI(int(user)))
                     #print("board number: ", whichBoard(int(user)))
                     gameOver()
                     boardNumber = oppenentTurn(whichBoard(int(user)))
@@ -292,23 +304,19 @@ class Board():
                         exit(0)
                     print("\nWhere would you like to go? \nEnter in the form of a coordinate")
                     try:
-                        user = int(raw_input('Input: '))
+                        user = int(input('Input: '))
                         parsed = True
                     except ValueError:
                         print('Invalid value!')
 
         def genTree(boardNumber):
-
+            tempOccupied = occupied.copy()
             possibleMoves = []
             for index in range(0,9):
                 if not boardIndexs[boardNumber][index] in occupied:
                     possibleMoves.append(boardIndexs[boardNumber][index])
             if len(possibleMoves) == 0:
                 return
-
-
-
-
 
         print("Okay you'll be playing as " + player + '.')
         yourTurn(4)
