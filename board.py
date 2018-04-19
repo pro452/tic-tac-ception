@@ -1,25 +1,11 @@
 """
-
 Written by: Michael Matthews
 Updated: 4-2-18
 Written for: Artificial Intelligence
 
 This program is a game called Tic-Tac-Ception which the opponent is an AI that uses min-max with alpha-beta trimming
-
-
-possible features:
-    - have it play itself against a dummy that goes in random places and see how times it wins
-    - Perform screen clear after each turn
-
 """
-
-import random
-from sys import setrecursionlimit
-
-#setrecursionlimit(15000)
-
 class Board():
-
     #Constructor initlizes the board to an empty state and then proceeds to call the main function
     def __init__(self):
         self.Values = []
@@ -32,12 +18,10 @@ class Board():
         player = "" #the players symbol
         oppenent = "" #the AIs symbol
         occupied = set() #parts of the board that contain either an 'X' or 'O'
-        #occupied = occupied.append(-1)
         boardIndexs = [[0,1,2,9,10,11,18,19,20],[3,4,5,12,13,14,21,22,23],[6,7,8,15,16,17,24,25,26],
                        [27,28,29,36,37,38,45,46,47],[30,31,32,39,40,41,48,49,50],[33,34,35,42,43,44,51,52,53],
                        [54,55,56,63,64,65,72,73,74],[57,58,59,66,67,68,75,76,77],[60,61,62,69,70,71,78,79,80]] #the indexs of each small board in order top left to bottom right
-        #boardNumber = 4
-        winningRows = [[0,1,2],[3,4,5],[6,7,8],[0,3,6],[1,4,7],[2,5,8],[0,4,8],[2,4,6]] #these are all the possible ways to win a tic-tac-toe board
+        winningRows = [[0,1,2],[3,4,5],[6,7,8],[0,3,6],[1,4,7],[2,5,8],[0,4,8],[2,4,6]]                        #these are all the possible ways to win a tic-tac-toe board
         wonBoards = []    #this list will contain the index of all small boards that have been won
         playerWins = []   #ths list will contain the index of boards that the player has won
         oppenentWins = [] #this list will contain the index of boards that the oppenent has won
@@ -103,9 +87,6 @@ class Board():
                     return -5
                 if whichBoard(position) in wonBoards:
                     return -1
-
-
-
                 return 0
 
         #This function checks the specified board to see if either the player or oppenet has 3 in a row there by winning that specified board
@@ -122,9 +103,6 @@ class Board():
                     playerPieces.append(number)
                 elif values[boardIndexs[boardNumber][number]] == oppenent:
                     oppenentPieces.append(number)
-
-            #playerPieces = set(playerPieces)
-            #oppenentPieces = set(oppenentPieces)
 
             for list in winningRows:
                 if list[0] in playerPieces and list[1] in playerPieces and list[2] in playerPieces:
@@ -201,43 +179,22 @@ class Board():
 
         #This function represents the AI taking a turn
         def oppenentTurn(boardNumber):
-
             if len(occupied) >= 81:
                 print("What a draw!")
                 exit(0)
-            # position = -1
-            # got_a_number = False
-            # first_corner_play = True
-
-            # for number in boardIndexs[boardNumber]:
-            #     if number in occupied:
-            #         first_corner_play = False
-            #
-            # if(first_corner_play):
-            #     position = boardIndexs[boardNumber][0]
-            #     got_a_number = True
-            #
-            # while not got_a_number:
-            #     position = random.randint(0,80)
-            #     if not position in occupied and boardNumber in wonBoards:
-            #         got_a_number = True
-            #     if (not position in occupied) and (position in boardIndexs[boardNumber]): #check for board
-            #         got_a_number = True
             possibleMoves = []
-            max = -100
-            tempPos = 0
             badpossibleMoves = []
             goodpossibleMoves = []
-            tempPoss = []
 
             if not boardNumber in wonBoards:
                 for index in range(0,9):
                     if not boardIndexs[boardNumber][index] in occupied:
                         possibleMoves.append(boardIndexs[boardNumber][index])
 
-                whatTempValues = self.Values.copy()
+                max = -1000
 
                 for index in range(0,len(possibleMoves)):
+                    whatTempValues = self.Values.copy()
                     #tempValues = self.Values.copy()
                     tempWonBoards = wonBoards.copy()
                     tempOccupied = occupied.copy()
@@ -256,10 +213,9 @@ class Board():
                             playerPossibleMoves.append(boardIndexs[boardNumber][playerIndex])
 
                     min = 1000
-                    playerTempValues = self.Values.copy()
-
 
                     for playerIndex in range(0,len(playerPossibleMoves)):
+                        playerTempValues = self.Values.copy()
                         #playerTempWonBoards = tempWonBoards.copy()
                         #playerTempOccupied = tempOccupied.copy()
                         #playerTempValues[whichBoard(possibleMoves[playerIndex])] = player
@@ -268,16 +224,16 @@ class Board():
                         print(updateBoard(self.Values))
                         #if(checkBoard(tempBoardNumber,playerTempValues)==0):
 
-                        #if playerTemp < min:
-                        #min = playerTemp
-                            #if not possibleMoves[index] in badpossibleMoves:
-                        badpossibleMoves.append([possibleMoves[index], playerTemp])
-
-                    self.Values = playerTempValues
-                    #if temp > max:
-                    #max = temp
+                        if playerTemp < min:
+                            min = playerTemp
+                            if not possibleMoves[index] in badpossibleMoves:
+                                badpossibleMoves.append([possibleMoves[index], playerTemp])
+                        self.Values = playerTempValues
+                    # if temp > max:
+                    max = temp
                     #tempPos = possibleMoves[index]
                     goodpossibleMoves.append([possibleMoves[index], temp])
+                    self.Values = whatTempValues
 
                     #tempPoss.append(temp)
                 def bubble(list):
@@ -313,8 +269,16 @@ class Board():
                     else:
                         found = True
 
-                self.Values = whatTempValues
+                diff = 1000
+                index
 
+                for goodList in goodpossibleMoves:
+                    for badList in badpossibleMoves:
+                        if goodList[1] - badList[1] < diff:
+                            diff = goodList[1] - badList[1]
+                            index = goodList[0]
+
+                #position = index
                 position = goodpossibleMoves[goodMax][0]
                 #position = tempPos
             else: #Fix this part so it selects an opperite value
@@ -327,7 +291,6 @@ class Board():
                         number += 1
                 position = number
 
-            #position = genTree(boardNumber)
             self.Values[position] = oppenent
             occupied.add(position)
             if checkBoard(whereAmI(position),self.Values)== 1:
@@ -336,17 +299,8 @@ class Board():
             else:
                 checkIfFull(whereAmI(position))
             print(updateBoard(self.Values))
-            #print(hValue(boardNumber))
             gameOver(wonBoards, playerWins,oppenentWins)
             return whichBoard(position)
-
-        def checkIfInWonBoard(position):
-            if(len(wonBoards)==0):
-                return False
-            for board in range(0, len(wonBoards)):
-                if position in boardIndexs[wonBoards[board]]:
-                    return True
-            return False
 
         #Checks if a given board is full
         def checkIfFull(boardNumber):
@@ -359,9 +313,6 @@ class Board():
         #This function represents the player taking a turn
         def yourTurn(boardNumber):
             user = ""
-            # while(user == '' ):
-            #     user = input()
-
             parsed = False
             while not parsed:
                 try:
@@ -375,23 +326,20 @@ class Board():
                     print("SPOT ALREADY TAKEN TRY AGAIN!")
                     try:
                         user = int(input('Input: '))
-                        parsed = True
                     except ValueError:
-                        print('Invalid value!1')
+                        print('Invalid value!')
                 if not int(user) in boardIndexs[boardNumber] and not boardNumber in wonBoards:
                     print("You must got in board ", boardNumber)
                     try:
                         user = int(input('Input: '))
-                        parsed = True
                     except ValueError:
-                        print('Invalid value!2')
+                        print('Invalid value!')
                 else:
                     self.Values[int(user)] = player
                     occupied.add(int(user))
                     print(updateBoard(self.Values))
                     print("checking board")
                     print(whereAmI(int(user)))
-                    #print(checkBoard(whereAmI(int(user))))
                     if checkBoard(whereAmI(int(user)),self.Values) == 0:
                         wonRow(whereAmI(int(user)), player, self.Values, wonBoards)
                         playerWins.append(whereAmI(int(user)))
@@ -400,7 +348,6 @@ class Board():
                     print("board number: ", whichBoard(int(user)))
                     gameOver(wonBoards, playerWins,oppenentWins)
                     boardNumber = oppenentTurn(whichBoard(int(user)))
-                    # genTree(whichBoard(int(user)))
 
                     if len(occupied) >= 81:
                         print("What a draw!")
@@ -408,78 +355,8 @@ class Board():
                     print("\nWhere would you like to go? \nEnter in the form of a coordinate")
                     try:
                         user = int(input('Input: '))
-                        parsed = True
                     except ValueError:
                         print('Invalid value!')
-
-        def get_branches(Values, whoseTurn, tempOccupied):
-            branches = []
-            for index in range(0,9):
-                if not boardIndexs[boardNumber][index] in tempOccupied:
-                    branches.append()
-
-        #def minimax(level, player):
-
-
-        def genTree(boardNumber):
-            possibleMoves = []
-            tempOccupied = occupied.copy()
-            tempValues = self.Values.copy()
-            tempWonBoards = wonBoards.copy()
-            tempOppenentWins = oppenentWins.copy()
-            tempPlayerWins = playerWins.copy()
-            tempBoardnumber = boardNumber
-
-            count = 0
-
-            startPlayer = 0
-            startOppenent = 0
-
-            while count < 1000000:
-                if startOppenent > 7:
-                    break
-                for index in range(startOppenent,9):
-                    if not boardIndexs[tempBoardnumber][index] in tempOccupied:
-                        # possibleMoves.append(boardIndexs[boardNumber][index])
-                        tempOccupied.add(boardIndexs[tempBoardnumber][index])
-                        tempValues[boardIndexs[tempBoardnumber][index]] = oppenent
-                        print(updateBoard(tempValues))
-                        if checkBoard(whereAmI(boardIndexs[tempBoardnumber][index]),tempValues)==1:
-                            #wonRow(whereAmI(boardIndexs[boardNumber][index]),oppenent,tempValues,tempWonBoards)
-                            #tempOppenentWins.append(whereAmI(boardIndexs[boardNumber][index]))
-                            #tempOccupied =
-                            print("index")
-                            print(index)
-                            return boardIndexs[boardNumber][startOppenent]
-                        tempBoardnumber = whichBoard(boardIndexs[boardNumber][index]) #This is returning the current spot not the start of the tree!!!!!!!!!!!!!!!!!!!!!
-                        break
-                        #genTreePlayer(whichBoard(boardIndexs[boardNumber][index]), tempOccupied, tempValues, tempWonBoards, tempOppenentWins,tempPlayerWins)
-
-                for index in range(startPlayer,9):
-                    if not boardIndexs[tempBoardnumber][index] in tempOccupied:
-                        tempOccupied.add(boardIndexs[tempBoardnumber][index])
-                        tempValues[boardIndexs[tempBoardnumber][index]] = player
-                        # print(updateBoard(tempValues))
-                        tempBoardnumber = whichBoard(boardIndexs[tempBoardnumber][index])
-                        if checkBoard(whereAmI(boardIndexs[tempBoardnumber][index]),tempValues)==0:
-                            #wonRow(whereAmI(boardIndexs[boardNumber][index]),player,tempValues,tempWonBoards)
-                            #tempPlayerWins.append(whereAmI(boardIndexs[boardNumber][index]))
-                            startOppenent += 1
-                            tempOccupied = occupied.copy()
-                            tempValues = self.Values.copy()
-                        break
-                        #genTreeAI(whichBoard(boardIndexs[boardNumber][index]),tempOccupied, tempValues, tempWonBoards,tempOppenentWins,tempPlayerWins)
-                count += 1
-
-            for index in range(0,9):
-                if not boardIndexs[boardNumber][index] in occupied:
-                    possibleMoves.append(boardIndexs[boardNumber][index])
-
-            for index in range(0, len(possibleMoves)):
-                if not whichBoard(possibleMoves[index]) in wonBoards:
-                    return boardIndexs[boardNumber][index]
-
-            return possibleMoves[0]
 
         print("Okay you'll be playing as " + player + '.')
         yourTurn(4)
