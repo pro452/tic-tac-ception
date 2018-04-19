@@ -115,19 +115,16 @@ class Board():
         #If somebody has won it clean exits
         def gameOver(wonBoards, playerWins,oppenentWins):
             if len(wonBoards) < 3:
-                return 0
+                return
 
             for list in winningRows:
                 if list[0] in playerWins and list[1] in playerWins and list[2] in playerWins:
                     print("Congratulations You've won!!!!!!!!")
                     exit(0)
-                    return -1
                 elif list[0] in oppenentWins and list[1] in oppenentWins and list[2] in oppenentWins:
                     print("You've lost...")
                     exit(0)
-                    return 1
-
-            return 0
+            return
 
         #This function updates the board to show that either the player or oppenent has won
         #If 'X' won then it updates that particular board, filling it up with X's in the shape of an X
@@ -191,15 +188,11 @@ class Board():
                     if not boardIndexs[boardNumber][index] in occupied:
                         possibleMoves.append(boardIndexs[boardNumber][index])
 
-                max = -1000
-
                 for index in range(0,len(possibleMoves)):
                     whatTempValues = self.Values.copy()
-                    #tempValues = self.Values.copy()
                     tempWonBoards = wonBoards.copy()
                     tempOccupied = occupied.copy()
 
-                    #print(type(tempValues[boardNumber][whichBoard(possibleMoves[index])]))
                     self.Values[whichBoard(possibleMoves[index])] = oppenent
                     temp = hValue(boardNumber,possibleMoves[index],oppenent)
                     if(checkBoard(boardNumber,self.Values))==1:
@@ -216,26 +209,20 @@ class Board():
 
                     for playerIndex in range(0,len(playerPossibleMoves)):
                         playerTempValues = self.Values.copy()
-                        #playerTempWonBoards = tempWonBoards.copy()
-                        #playerTempOccupied = tempOccupied.copy()
-                        #playerTempValues[whichBoard(possibleMoves[playerIndex])] = player
                         self.Values[playerPossibleMoves[playerIndex]] = player
                         playerTemp = hValue(tempBoardNumber,playerPossibleMoves[playerIndex],player)
                         print(updateBoard(self.Values))
-                        #if(checkBoard(tempBoardNumber,playerTempValues)==0):
 
                         if playerTemp < min:
                             min = playerTemp
                             if not possibleMoves[index] in badpossibleMoves:
                                 badpossibleMoves.append([possibleMoves[index], playerTemp])
                         self.Values = playerTempValues
-                    # if temp > max:
-                    max = temp
-                    #tempPos = possibleMoves[index]
+
                     goodpossibleMoves.append([possibleMoves[index], temp])
                     self.Values = whatTempValues
 
-                    #tempPoss.append(temp)
+                #bubble sort to sort the list
                 def bubble(list):
                     for index in range(0,len(list)-1):
                         flag = False
@@ -249,14 +236,9 @@ class Board():
                             return
 
                 bubble(goodpossibleMoves)
-                # print(goodpossibleMoves)
 
                 goodMax = len(goodpossibleMoves) - 1
                 badMax = len(badpossibleMoves) - 1
-                print("good")
-                print(goodpossibleMoves)
-                print("Bad")
-                print(badpossibleMoves)
 
                 found = False
 
@@ -269,19 +251,8 @@ class Board():
                     else:
                         found = True
 
-                diff = 1000
-                index
-
-                for goodList in goodpossibleMoves:
-                    for badList in badpossibleMoves:
-                        if goodList[1] - badList[1] < diff:
-                            diff = goodList[1] - badList[1]
-                            index = goodList[0]
-
-                #position = index
                 position = goodpossibleMoves[goodMax][0]
-                #position = tempPos
-            else: #Fix this part so it selects an opperite value
+            else:
                 number = 0
                 found = False
                 while not found:
